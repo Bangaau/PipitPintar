@@ -1,0 +1,2530 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#eefaff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>Pipit Huruf — Main, Dengar, Kenal, dan Ingat Huruf!</title>
+  <style>
+    :root {
+      --sky: #dff5ff;
+      --sky-2: #bfe8ff;
+      --blue: #68bff3;
+      --blue-deep: #2f8fc9;
+      --mint: #dff8e9;
+      --mint-strong: #73d7a4;
+      --yellow: #fff3b8;
+      --yellow-strong: #f4c95d;
+      --peach: #ffe2d5;
+      --peach-strong: #ff9e78;
+      --lavender: #eee5ff;
+      --lavender-strong: #a88ce8;
+      --white: #ffffff;
+      --ink: #26364a;
+      --muted: #6f7f91;
+      --success: #57c98a;
+      --danger-soft: #ffdeda;
+      --danger: #e56b63;
+      --shadow: 0 14px 38px rgba(67, 108, 138, 0.13);
+      --shadow-soft: 0 8px 22px rgba(67, 108, 138, 0.10);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --nav-h: 76px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 12% 4%, rgba(255,255,255,.95), transparent 28%),
+        linear-gradient(180deg, #f4fcff 0%, #fffdf8 55%, #f8f5ff 100%);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "Arial Rounded MT Bold", "Arial Rounded MT", Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+    }
+
+    button, input { font: inherit; }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      color: inherit;
+      touch-action: manipulation;
+    }
+
+    button:focus-visible, input:focus-visible {
+      outline: 4px solid rgba(47, 143, 201, .25);
+      outline-offset: 2px;
+    }
+
+    button:disabled { cursor: default; }
+
+    #app {
+      width: 100%;
+      min-height: 100dvh;
+    }
+
+    .app-shell {
+      width: min(100%, 560px);
+      min-height: 100dvh;
+      margin: 0 auto;
+      padding: 18px 16px calc(var(--nav-h) + 34px + env(safe-area-inset-bottom));
+      position: relative;
+    }
+
+    .app-shell.no-nav { padding-bottom: 28px; }
+
+    .page {
+      animation: fadeIn .32s ease both;
+    }
+
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .back-btn, .icon-btn, .mini-btn {
+      min-width: 46px;
+      min-height: 46px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.85);
+      box-shadow: var(--shadow-soft);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+
+    .back-btn:active, .icon-btn:active, .mini-btn:active,
+    .primary-btn:active, .secondary-btn:active, .game-card:active,
+    .letter-card:active, .answer-btn:active, .nav-btn:active {
+      transform: scale(.96);
+    }
+
+    .page-title {
+      margin: 0;
+      font-size: clamp(24px, 7vw, 32px);
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: -.4px;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .mascot {
+      width: 94px;
+      height: 94px;
+      border-radius: 30px;
+      display: grid;
+      place-items: center;
+      font-size: 54px;
+      background: linear-gradient(145deg, #ffffff, #e7f8ff);
+      box-shadow: var(--shadow);
+      position: relative;
+      flex: 0 0 auto;
+      animation: floaty 3.1s ease-in-out infinite;
+    }
+
+    .mascot.small {
+      width: 68px;
+      height: 68px;
+      border-radius: 22px;
+      font-size: 39px;
+    }
+
+    .mascot::after {
+      content: "";
+      width: 22px;
+      height: 8px;
+      border-radius: 99px;
+      background: rgba(38,54,74,.08);
+      position: absolute;
+      bottom: -10px;
+      filter: blur(2px);
+    }
+
+    .hero {
+      background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(223,245,255,.88));
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(255,243,184,.55);
+      right: -52px;
+      top: -58px;
+    }
+
+    .hero-copy { position: relative; z-index: 1; flex: 1; }
+    .hero h1 { margin: 0 0 6px; font-size: clamp(26px, 7vw, 36px); line-height: 1.05; }
+    .hero p { margin: 0; color: var(--muted); line-height: 1.45; font-size: 15px; }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin: 12px 0 14px;
+    }
+
+    .stat-chip {
+      min-height: 64px;
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(255,255,255,.95);
+      box-shadow: var(--shadow-soft);
+      border-radius: 20px;
+      padding: 10px 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .stat-chip strong { font-size: 19px; }
+    .stat-chip span { font-size: 11px; color: var(--muted); font-weight: 800; }
+
+    .card {
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(255,255,255,.95);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .card.mint { background: linear-gradient(145deg, #ffffff, var(--mint)); }
+    .card.yellow { background: linear-gradient(145deg, #ffffff, var(--yellow)); }
+    .card.peach { background: linear-gradient(145deg, #ffffff, var(--peach)); }
+    .card.lavender { background: linear-gradient(145deg, #ffffff, var(--lavender)); }
+    .card.sky { background: linear-gradient(145deg, #ffffff, var(--sky)); }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .progress-head strong { font-size: 16px; }
+    .progress-head span { font-weight: 900; color: var(--blue-deep); }
+
+    .progress-track {
+      height: 12px;
+      background: rgba(74, 114, 145, .10);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--blue), var(--mint-strong));
+      transition: width .45s ease;
+    }
+
+    .primary-btn, .secondary-btn, .danger-btn {
+      width: 100%;
+      min-height: 54px;
+      border-radius: 19px;
+      padding: 12px 18px;
+      font-weight: 900;
+      font-size: 15px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 9px;
+      transition: transform .16s ease, filter .16s ease;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #6bc8f5, #66d4a2);
+      color: #17384b;
+      box-shadow: 0 12px 24px rgba(80, 183, 193, .22);
+    }
+
+    .secondary-btn {
+      background: rgba(255,255,255,.9);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .danger-btn {
+      background: var(--danger-soft);
+      color: #8b3732;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .section-title {
+      margin: 20px 2px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.2;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+    }
+
+    .game-card {
+      min-height: 126px;
+      text-align: left;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+      transition: transform .16s ease;
+    }
+
+    .game-card .emoji { font-size: 33px; display: block; margin-bottom: 14px; }
+    .game-card strong { display: block; font-size: 15px; line-height: 1.2; }
+    .game-card small { color: var(--muted); display: block; margin-top: 5px; line-height: 1.3; }
+    .game-card.c1 { background: linear-gradient(145deg, #e8f8ff, #cfefff); }
+    .game-card.c2 { background: linear-gradient(145deg, #ecfff4, #d7f6e4); }
+    .game-card.c3 { background: linear-gradient(145deg, #fff9d9, #fff0ad); }
+    .game-card.c4 { background: linear-gradient(145deg, #f4edff, #e7dbff); }
+
+    .letter-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .letter-card {
+      min-height: 66px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.93);
+      box-shadow: var(--shadow-soft);
+      font-size: clamp(24px, 7vw, 32px);
+      font-weight: 900;
+      position: relative;
+      transition: transform .16s ease;
+    }
+
+    .letter-card:nth-child(5n+1) { background: var(--sky); }
+    .letter-card:nth-child(5n+2) { background: var(--mint); }
+    .letter-card:nth-child(5n+3) { background: var(--yellow); }
+    .letter-card:nth-child(5n+4) { background: var(--peach); }
+    .letter-card:nth-child(5n+5) { background: var(--lavender); }
+
+    .learned-mark {
+      position: absolute;
+      right: 6px;
+      top: 5px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--success);
+      color: #fff;
+      font-size: 11px;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 5px 12px rgba(87,201,138,.25);
+    }
+
+    .detail-card {
+      text-align: center;
+      padding: 24px 18px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .detail-letters {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      align-items: stretch;
+      margin: 8px auto 18px;
+    }
+
+    .letter-box {
+      width: min(42vw, 150px);
+      min-height: 152px;
+      border-radius: 28px;
+      background: linear-gradient(150deg, #ffffff, var(--sky));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.9), var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .letter-box.lower { background: linear-gradient(150deg, #ffffff, var(--lavender)); }
+    .letter-big { font-size: clamp(72px, 22vw, 104px); font-weight: 950; line-height: .95; }
+    .letter-label { font-size: 10px; margin-top: 10px; color: var(--muted); font-weight: 900; letter-spacing: .5px; }
+
+    .word-emoji { font-size: 72px; margin: 8px 0 4px; animation: bounceSoft 2.4s ease-in-out infinite; }
+    .word-line { font-size: 25px; font-weight: 950; margin: 4px 0 18px; }
+
+    .speaker {
+      min-width: 54px;
+      min-height: 54px;
+      border-radius: 19px;
+      background: linear-gradient(145deg, #fff, #e9f8ff);
+      box-shadow: var(--shadow-soft);
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 14px;
+      font-weight: 900;
+    }
+
+    .speaker.speaking { animation: pulse 1s ease-in-out infinite; }
+
+    .question-card {
+      text-align: center;
+      padding: 22px 18px;
+    }
+
+    .question-kicker {
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 950;
+      color: var(--blue-deep);
+      letter-spacing: .7px;
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      font-size: clamp(23px, 7vw, 32px);
+      line-height: 1.18;
+      font-weight: 950;
+      margin: 6px 0 16px;
+    }
+
+    .question-emoji { font-size: 76px; margin: 8px 0 2px; }
+    .question-word { font-size: 28px; font-weight: 950; letter-spacing: 1px; margin-bottom: 10px; }
+
+    .answer-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 11px;
+      margin-top: 14px;
+    }
+
+    .answer-grid.three { grid-template-columns: repeat(3, 1fr); }
+
+    .answer-btn {
+      min-height: 86px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.93);
+      box-shadow: var(--shadow-soft);
+      font-size: clamp(32px, 10vw, 46px);
+      font-weight: 950;
+      transition: transform .16s ease, background .18s ease;
+    }
+
+    .answer-btn.correct {
+      background: #d9f8e6;
+      animation: bounce .5s ease;
+    }
+
+    .answer-btn.wrong { animation: shake .38s ease; background: #fff1ee; }
+
+    .game-progress {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 2px 11px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .mini-progress {
+      flex: 1;
+      height: 8px;
+      margin-left: 12px;
+      background: rgba(63,97,124,.10);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .mini-progress > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--blue), var(--mint-strong)); }
+
+    .find-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .find-cell {
+      min-height: 68px;
+      border-radius: 19px;
+      background: rgba(255,255,255,.94);
+      box-shadow: var(--shadow-soft);
+      font-size: 28px;
+      font-weight: 950;
+    }
+
+    .find-cell.found {
+      background: #dff8e9;
+      color: #1f8553;
+      transform: scale(.94);
+    }
+
+    .match-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .match-col { display: grid; gap: 10px; }
+
+    .match-btn {
+      min-height: 66px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.93);
+      box-shadow: var(--shadow-soft);
+      font-size: 29px;
+      font-weight: 950;
+      transition: transform .16s ease, background .16s ease;
+    }
+
+    .match-btn.selected { background: var(--yellow); transform: translateY(-2px); }
+    .match-btn.matched { background: var(--mint); color: #258453; opacity: .72; }
+    .match-btn.wrong { animation: shake .38s ease; background: #fff1ee; }
+
+    .result-wrap {
+      text-align: center;
+      padding-top: 16px;
+    }
+
+    .result-emoji { font-size: 80px; animation: bounce 1s ease both; }
+    .result-score { font-size: 44px; font-weight: 950; margin: 6px 0; }
+    .reward-pill {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      border-radius: 999px;
+      padding: 9px 14px;
+      margin: 5px;
+      font-weight: 900;
+      background: rgba(255,255,255,.9);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .badge-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .badge-card {
+      min-height: 130px;
+      border-radius: 22px;
+      padding: 15px 12px;
+      text-align: center;
+      background: rgba(255,255,255,.9);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .badge-card.locked { filter: grayscale(.75); opacity: .5; }
+    .badge-icon { font-size: 35px; margin-bottom: 7px; }
+    .badge-card strong { display: block; font-size: 13px; line-height: 1.25; }
+    .badge-card small { color: var(--muted); display: block; margin-top: 5px; font-size: 11px; line-height: 1.35; }
+
+    .letter-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .letter-pill {
+      min-width: 36px;
+      height: 36px;
+      padding: 0 9px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      background: var(--sky);
+    }
+
+    .empty-box {
+      padding: 20px;
+      text-align: center;
+      border-radius: 22px;
+      background: linear-gradient(145deg, #fff, var(--yellow));
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 14px;
+    }
+    .empty-box .emoji { font-size: 42px; }
+    .empty-box h3 { margin: 7px 0 5px; }
+    .empty-box p { margin: 0 0 14px; color: var(--muted); }
+
+    .parent-question {
+      font-size: 34px;
+      font-weight: 950;
+      text-align: center;
+      margin: 12px 0 14px;
+    }
+
+    .number-input {
+      width: 100%;
+      min-height: 56px;
+      border: 2px solid rgba(83,123,151,.12);
+      border-radius: 18px;
+      padding: 12px 16px;
+      font-size: 24px;
+      text-align: center;
+      color: var(--ink);
+      background: rgba(255,255,255,.95);
+      margin-bottom: 10px;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      padding: 20px 10px 4px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(10px + env(safe-area-inset-bottom));
+      width: calc(min(100%, 560px) - 24px);
+      min-height: var(--nav-h);
+      padding: 8px;
+      border-radius: 26px;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 16px 42px rgba(58,92,120,.20);
+      border: 1px solid rgba(255,255,255,.95);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+      z-index: 40;
+    }
+
+    .nav-btn {
+      min-height: 58px;
+      border-radius: 19px;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      font-size: 20px;
+      transition: transform .16s ease, background .16s ease;
+    }
+    .nav-btn span { font-size: 10px; font-weight: 900; }
+    .nav-btn.active { background: linear-gradient(145deg, var(--sky), var(--mint)); }
+
+    .splash {
+      min-height: calc(100dvh - 36px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px 18px;
+    }
+
+    .splash .mascot { width: 132px; height: 132px; border-radius: 40px; font-size: 75px; margin: 0 auto 26px; }
+    .brand-title { font-size: clamp(38px, 12vw, 58px); font-weight: 950; letter-spacing: -1.5px; margin: 0; }
+    .tagline { margin: 8px auto 0; max-width: 320px; color: var(--muted); line-height: 1.5; font-weight: 700; }
+
+    .onboarding {
+      min-height: calc(100dvh - 44px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 30px 2px 10px;
+    }
+
+    .onboard-art {
+      min-height: 310px;
+      border-radius: 36px;
+      background: linear-gradient(145deg, #fff, var(--sky));
+      box-shadow: var(--shadow);
+      display: grid;
+      place-items: center;
+      font-size: 100px;
+      position: relative;
+      overflow: hidden;
+    }
+    .onboard-art::before, .onboard-art::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      opacity: .55;
+    }
+    .onboard-art::before { width: 160px; height: 160px; background: var(--yellow); left: -60px; top: -50px; }
+    .onboard-art::after { width: 190px; height: 190px; background: var(--lavender); right: -75px; bottom: -85px; }
+    .onboard-art > span { position: relative; z-index: 1; animation: floaty 2.8s ease-in-out infinite; }
+
+    .onboard-copy { text-align: center; padding: 24px 14px 12px; }
+    .onboard-copy h1 { font-size: 29px; margin: 0 0 8px; }
+    .onboard-copy p { color: var(--muted); line-height: 1.55; margin: 0 auto; max-width: 360px; }
+    .dots { display: flex; justify-content: center; gap: 7px; margin: 10px 0 18px; }
+    .dot { width: 8px; height: 8px; border-radius: 99px; background: rgba(70,107,134,.18); }
+    .dot.active { width: 22px; background: var(--blue); }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(31,47,63,.34);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 100;
+      animation: fadeIn .2s ease both;
+    }
+
+    .modal {
+      width: min(100%, 430px);
+      max-height: min(80dvh, 620px);
+      overflow: auto;
+      border-radius: 30px;
+      background: #fff;
+      box-shadow: 0 28px 80px rgba(30,53,70,.28);
+      padding: 22px;
+      text-align: center;
+      animation: slideUp .28s ease both;
+    }
+
+    .modal .big { font-size: 58px; margin-bottom: 8px; }
+    .modal h2 { margin: 0 0 8px; font-size: 25px; }
+    .modal p { color: var(--muted); line-height: 1.5; margin: 0 0 18px; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(var(--nav-h) + 28px + env(safe-area-inset-bottom));
+      width: min(calc(100% - 34px), 420px);
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: rgba(38,54,74,.94);
+      color: #fff;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+      z-index: 120;
+      animation: slideUp .25s ease both;
+      pointer-events: none;
+    }
+
+    #celebration-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 90;
+    }
+
+    .particle {
+      position: absolute;
+      top: -40px;
+      animation: fall linear forwards;
+      will-change: transform, opacity;
+      filter: drop-shadow(0 6px 5px rgba(0,0,0,.08));
+    }
+
+    .hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      margin-top: 10px;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes floaty { 0%,100%{ transform: translateY(0) rotate(-1deg); } 50%{ transform: translateY(-8px) rotate(1deg); } }
+    @keyframes pulse { 0%,100%{ transform: scale(1); box-shadow: var(--shadow-soft); } 50%{ transform: scale(1.05); box-shadow: 0 10px 28px rgba(75,168,214,.28); } }
+    @keyframes bounce { 0%{ transform: scale(.94); } 45%{ transform: scale(1.12); } 70%{ transform: scale(.98); } 100%{ transform: scale(1); } }
+    @keyframes bounceSoft { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-6px); } }
+    @keyframes shake { 0%,100%{ transform: translateX(0); } 25%{ transform: translateX(-7px); } 50%{ transform: translateX(7px); } 75%{ transform: translateX(-4px); } }
+    @keyframes fall {
+      0% { transform: translate3d(0,-20px,0) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translate3d(var(--drift), 110dvh, 0) rotate(var(--spin)); opacity: .1; }
+    }
+
+    @media (max-width: 350px) {
+      .app-shell { padding-left: 12px; padding-right: 12px; }
+      .letter-grid { gap: 7px; }
+      .letter-card { min-height: 58px; border-radius: 17px; }
+      .game-grid { gap: 9px; }
+      .game-card { min-height: 116px; padding: 13px; }
+      .detail-letters { gap: 10px; }
+      .letter-box { min-height: 134px; border-radius: 23px; }
+      .answer-grid { gap: 8px; }
+      .answer-btn { min-height: 76px; }
+    }
+
+    @media (min-width: 700px) {
+      .app-shell { padding-top: 26px; }
+      .game-card { min-height: 145px; }
+      .letter-card { min-height: 76px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" aria-live="polite"></div>
+  <div id="overlay-root"></div>
+  <div id="celebration-layer" aria-hidden="true"></div>
+
+  <script>
+    "use strict";
+
+    // ============================================================
+    // DATA
+    // ============================================================
+    const LETTERS = [
+      { letter: "A", lowercase: "a", pronunciation: "A", word: "Apel", emoji: "🍎" },
+      { letter: "B", lowercase: "b", pronunciation: "Be", word: "Bola", emoji: "⚽" },
+      { letter: "C", lowercase: "c", pronunciation: "Ce", word: "Cicak", emoji: "🦎" },
+      { letter: "D", lowercase: "d", pronunciation: "De", word: "Domba", emoji: "🐑" },
+      { letter: "E", lowercase: "e", pronunciation: "E", word: "Es", emoji: "🧊" },
+      { letter: "F", lowercase: "f", pronunciation: "Ef", word: "Foto", emoji: "📷" },
+      { letter: "G", lowercase: "g", pronunciation: "Ge", word: "Gajah", emoji: "🐘" },
+      { letter: "H", lowercase: "h", pronunciation: "Ha", word: "Hujan", emoji: "🌧️" },
+      { letter: "I", lowercase: "i", pronunciation: "I", word: "Ikan", emoji: "🐟" },
+      { letter: "J", lowercase: "j", pronunciation: "Je", word: "Jeruk", emoji: "🍊" },
+      { letter: "K", lowercase: "k", pronunciation: "Ka", word: "Kucing", emoji: "🐱" },
+      { letter: "L", lowercase: "l", pronunciation: "El", word: "Lampu", emoji: "💡" },
+      { letter: "M", lowercase: "m", pronunciation: "Em", word: "Mobil", emoji: "🚗" },
+      { letter: "N", lowercase: "n", pronunciation: "En", word: "Nanas", emoji: "🍍" },
+      { letter: "O", lowercase: "o", pronunciation: "O", word: "Obat", emoji: "💊" },
+      { letter: "P", lowercase: "p", pronunciation: "Pe", word: "Pisang", emoji: "🍌" },
+      { letter: "Q", lowercase: "q", pronunciation: "Ki", word: "Quran", emoji: "📖" },
+      { letter: "R", lowercase: "r", pronunciation: "Er", word: "Rumah", emoji: "🏠" },
+      { letter: "S", lowercase: "s", pronunciation: "Es", word: "Sapi", emoji: "🐄" },
+      { letter: "T", lowercase: "t", pronunciation: "Te", word: "Topi", emoji: "🎩" },
+      { letter: "U", lowercase: "u", pronunciation: "U", word: "Ular", emoji: "🐍" },
+      { letter: "V", lowercase: "v", pronunciation: "Ve", word: "Vas", emoji: "🏺" },
+      { letter: "W", lowercase: "w", pronunciation: "We", word: "Wortel", emoji: "🥕" },
+      { letter: "X", lowercase: "x", pronunciation: "Eks", word: "Xilofon", emoji: "🎼" },
+      { letter: "Y", lowercase: "y", pronunciation: "Ye", word: "Yoyo", emoji: "🪀" },
+      { letter: "Z", lowercase: "z", pronunciation: "Zet", word: "Zebra", emoji: "🦓" }
+    ];
+
+    const BADGES = [
+      { id: "start", icon: "🌱", name: "MULAI BELAJAR", desc: "Belajar 1 huruf", test: s => s.learnedLetters.length >= 1 },
+      { id: "explorer", icon: "🔤", name: "PENJELAJAH HURUF", desc: "Belajar 5 huruf", test: s => s.learnedLetters.length >= 5 },
+      { id: "smart", icon: "⭐", name: "JAGO HURUF", desc: "Belajar 10 huruf", test: s => s.learnedLetters.length >= 10 },
+      { id: "super", icon: "🌟", name: "SUPER HURUF", desc: "Belajar 20 huruf", test: s => s.learnedLetters.length >= 20 },
+      { id: "master", icon: "🏆", name: "MASTER HURUF", desc: "Belajar 26 huruf", test: s => s.learnedLetters.length >= 26 },
+      { id: "guesser", icon: "🎯", name: "PENEBAK HEBAT", desc: "20 jawaban benar", test: s => s.correctAnswers >= 20 },
+      { id: "gamer", icon: "🎮", name: "PEMAIN HEBAT", desc: "10 game selesai", test: s => s.gamesPlayed >= 10 }
+    ];
+
+    const STORAGE = {
+      onboarding: "pipitHurufOnboarding",
+      learned: "pipitHurufLearned",
+      stars: "pipitHurufStars",
+      diamonds: "pipitHurufDiamonds",
+      streak: "pipitHurufStreak",
+      lastOpen: "pipitHurufLastOpen",
+      correct: "pipitHurufCorrectAnswers",
+      games: "pipitHurufGamesPlayed",
+      badges: "pipitHurufBadges"
+    };
+
+    const defaultState = () => ({
+      stars: 0,
+      diamonds: 0,
+      streak: 0,
+      lastOpen: "",
+      learnedLetters: [],
+      correctAnswers: 0,
+      gamesPlayed: 0,
+      badges: []
+    });
+
+    let state = defaultState();
+
+    const runtime = {
+      currentView: "splash",
+      previousView: "home",
+      viewToken: 0,
+      onboardingSlide: 0,
+      homeGreeted: false,
+      letterIndex: 0,
+      isTransitioning: false,
+      guess: null,
+      find: null,
+      match: null,
+      first: null,
+      parentA: 4,
+      parentB: 3,
+      badgeQueue: [],
+      toastTimer: null
+    };
+
+    // ============================================================
+    // SAFE STORAGE
+    // ============================================================
+    function safeGet(key, fallback = null) {
+      try {
+        const value = localStorage.getItem(key);
+        return value === null ? fallback : value;
+      } catch (_) {
+        return fallback;
+      }
+    }
+
+    function safeSet(key, value) {
+      try {
+        localStorage.setItem(key, value);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function safeRemove(key) {
+      try { localStorage.removeItem(key); } catch (_) {}
+    }
+
+    function safeParseArray(value) {
+      if (!value) return [];
+      try {
+        const parsed = JSON.parse(value);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function safeInt(value, fallback = 0) {
+      const n = Number.parseInt(value, 10);
+      return Number.isFinite(n) && n >= 0 ? n : fallback;
+    }
+
+    function loadState() {
+      const validLetters = new Set(LETTERS.map(x => x.letter));
+      const validBadgeIds = new Set(BADGES.map(x => x.id));
+
+      const learned = safeParseArray(safeGet(STORAGE.learned, "[]"))
+        .filter(x => validLetters.has(x));
+      const badges = safeParseArray(safeGet(STORAGE.badges, "[]"))
+        .filter(x => validBadgeIds.has(x));
+
+      state = {
+        stars: safeInt(safeGet(STORAGE.stars, "0")),
+        diamonds: safeInt(safeGet(STORAGE.diamonds, "0")),
+        streak: safeInt(safeGet(STORAGE.streak, "0")),
+        lastOpen: safeGet(STORAGE.lastOpen, "") || "",
+        learnedLetters: [...new Set(learned)].slice(0, 26),
+        correctAnswers: safeInt(safeGet(STORAGE.correct, "0")),
+        gamesPlayed: safeInt(safeGet(STORAGE.games, "0")),
+        badges: [...new Set(badges)]
+      };
+    }
+
+    function saveState() {
+      safeSet(STORAGE.stars, String(Math.max(0, safeInt(state.stars))));
+      safeSet(STORAGE.diamonds, String(Math.max(0, safeInt(state.diamonds))));
+      safeSet(STORAGE.streak, String(Math.max(0, safeInt(state.streak))));
+      safeSet(STORAGE.lastOpen, state.lastOpen || "");
+      safeSet(STORAGE.learned, JSON.stringify([...new Set(state.learnedLetters)].slice(0, 26)));
+      safeSet(STORAGE.correct, String(Math.max(0, safeInt(state.correctAnswers))));
+      safeSet(STORAGE.games, String(Math.max(0, safeInt(state.gamesPlayed))));
+      safeSet(STORAGE.badges, JSON.stringify([...new Set(state.badges)]));
+    }
+
+    function localDateString(date = new Date()) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function dayDifference(fromYmd, toYmd) {
+      const parse = value => {
+        const [y, m, d] = String(value).split("-").map(Number);
+        if (![y, m, d].every(Number.isFinite)) return null;
+        return new Date(y, m - 1, d, 12, 0, 0, 0);
+      };
+      const a = parse(fromYmd);
+      const b = parse(toYmd);
+      if (!a || !b) return null;
+      return Math.round((b - a) / 86400000);
+    }
+
+    function updateStreak() {
+      const today = localDateString();
+      if (!state.lastOpen) {
+        state.streak = 1;
+        state.lastOpen = today;
+      } else if (state.lastOpen !== today) {
+        const diff = dayDifference(state.lastOpen, today);
+        state.streak = diff === 1 ? Math.max(1, state.streak + 1) : 1;
+        state.lastOpen = today;
+      }
+      saveState();
+    }
+
+    // ============================================================
+    // HELPERS
+    // ============================================================
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function shuffleArray(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function randomItem(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function randomLetters(count, exclude = []) {
+      const excluded = new Set(exclude);
+      return shuffleArray(LETTERS.map(x => x.letter).filter(x => !excluded.has(x))).slice(0, count);
+    }
+
+    function clamp(n, min, max) {
+      return Math.min(max, Math.max(min, n));
+    }
+
+    function getLetter(letter) {
+      return LETTERS.find(x => x.letter === letter) || LETTERS[0];
+    }
+
+    function getLetterIndex(letter) {
+      const i = LETTERS.findIndex(x => x.letter === letter);
+      return i >= 0 ? i : 0;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    // ============================================================
+    // AUDIO MANAGER
+    // ============================================================
+    const audioManager = {
+      supported: "speechSynthesis" in window && "SpeechSynthesisUtterance" in window,
+      voices: [],
+      selectedVoice: null,
+      sessionId: 0,
+      isSpeaking: false,
+      currentDone: null,
+      currentTimer: null,
+
+      refreshVoices() {
+        if (!this.supported) return;
+        try {
+          this.voices = window.speechSynthesis.getVoices() || [];
+          this.selectedVoice = selectIndonesianVoice(this.voices);
+        } catch (_) {
+          this.voices = [];
+          this.selectedVoice = null;
+        }
+      },
+
+      stop() {
+        this.sessionId += 1;
+        this.isSpeaking = false;
+        if (this.currentTimer) {
+          clearTimeout(this.currentTimer);
+          this.currentTimer = null;
+        }
+        const done = this.currentDone;
+        this.currentDone = null;
+        try {
+          if (this.supported) window.speechSynthesis.cancel();
+        } catch (_) {}
+        if (typeof done === "function") done();
+        updateSpeakerUI();
+        return this.sessionId;
+      },
+
+      async speak(text, options = {}, session = this.sessionId) {
+        if (!text || !this.supported || session !== this.sessionId) return;
+
+        return new Promise(resolve => {
+          let settled = false;
+          const finish = () => {
+            if (settled) return;
+            settled = true;
+            if (this.currentTimer) {
+              clearTimeout(this.currentTimer);
+              this.currentTimer = null;
+            }
+            if (this.currentDone === finish) this.currentDone = null;
+            this.isSpeaking = false;
+            updateSpeakerUI();
+            resolve();
+          };
+
+          try {
+            const utterance = new SpeechSynthesisUtterance(String(text));
+            utterance.lang = "id-ID";
+            if (this.selectedVoice) utterance.voice = this.selectedVoice;
+            utterance.rate = Number.isFinite(options.rate) ? options.rate : 0.88;
+            utterance.pitch = Number.isFinite(options.pitch) ? options.pitch : 1.05;
+            utterance.volume = Number.isFinite(options.volume) ? options.volume : 1;
+            utterance.onend = finish;
+            utterance.onerror = finish;
+
+            this.currentDone = finish;
+            this.isSpeaking = true;
+            updateSpeakerUI();
+
+            const estimated = clamp(String(text).length * 105 + 1800, 2200, 9000);
+            this.currentTimer = setTimeout(finish, estimated);
+
+            if (session !== this.sessionId) {
+              finish();
+              return;
+            }
+
+            window.speechSynthesis.speak(utterance);
+          } catch (_) {
+            finish();
+          }
+        });
+      },
+
+      async speakSequence(items, options = {}) {
+        const session = Number.isFinite(options.session) ? options.session : this.sessionId;
+        const preDelay = Number.isFinite(options.preDelay) ? options.preDelay : 0;
+        if (preDelay > 0) {
+          await delay(preDelay);
+          if (session !== this.sessionId) return;
+        }
+
+        for (const item of items) {
+          if (session !== this.sessionId) return;
+          const text = item && item.text ? item.text : "";
+          const style = item && item.style ? item.style : "instruction";
+          await this.speak(text, audioStyle(style), session);
+          if (session !== this.sessionId) return;
+          const pause = item && Number.isFinite(item.pause) ? item.pause : 0;
+          if (pause > 0) {
+            await delay(pause);
+            if (session !== this.sessionId) return;
+          }
+        }
+      },
+
+      async playSequence(items, options = {}) {
+        const restartDelay = Number.isFinite(options.restartDelay) ? options.restartDelay : 130;
+        const extraDelay = Number.isFinite(options.preDelay) ? options.preDelay : 0;
+        const session = this.stop();
+        await delay(restartDelay + extraDelay);
+        if (session !== this.sessionId) return;
+        return this.speakSequence(items, { session });
+      }
+    };
+
+    function audioStyle(type) {
+      if (type === "letter") return { rate: 0.82, pitch: 1.05, volume: 1 };
+      if (type === "positive") return { rate: 0.92, pitch: 1.10, volume: 1 };
+      return { rate: 0.88, pitch: 1.05, volume: 1 };
+    }
+
+    function selectIndonesianVoice(voices = []) {
+      if (!Array.isArray(voices) || voices.length === 0) return null;
+      const exact = voices.find(v => String(v.lang).toLowerCase() === "id-id");
+      if (exact) return exact;
+      const idLang = voices.find(v => String(v.lang).toLowerCase().startsWith("id"));
+      if (idLang) return idLang;
+      const named = voices.find(v => /indonesia|indonesian/i.test(String(v.name)));
+      return named || null;
+    }
+
+    function speakAsync(text, options = {}) {
+      return audioManager.speak(text, options, audioManager.sessionId);
+    }
+
+    function speakSequence(items, options = {}) {
+      return audioManager.playSequence(items, options);
+    }
+
+    function stopAudio() {
+      return audioManager.stop();
+    }
+
+    function updateSpeakerUI() {
+      document.querySelectorAll(".speaker").forEach(btn => {
+        btn.classList.toggle("speaking", audioManager.isSpeaking);
+        btn.setAttribute("aria-pressed", audioManager.isSpeaking ? "true" : "false");
+      });
+    }
+
+    function scheduleAudio(items, wait = 600, viewToken = runtime.viewToken) {
+      const session = audioManager.sessionId;
+      (async () => {
+        await delay(wait);
+        if (runtime.viewToken !== viewToken || session !== audioManager.sessionId) return;
+        await audioManager.speakSequence(items, { session });
+      })();
+    }
+
+    if (audioManager.supported) {
+      audioManager.refreshVoices();
+      try {
+        window.speechSynthesis.onvoiceschanged = () => audioManager.refreshVoices();
+      } catch (_) {}
+    }
+
+    // ============================================================
+    // REWARDS / BADGES
+    // ============================================================
+    function addStars(amount = 1) {
+      const n = Math.max(0, safeInt(amount));
+      state.stars = Math.max(0, safeInt(state.stars) + n);
+      saveState();
+    }
+
+    function addDiamonds(amount = 1) {
+      const n = Math.max(0, safeInt(amount));
+      state.diamonds = Math.max(0, safeInt(state.diamonds) + n);
+      saveState();
+    }
+
+    function addCorrect(amount = 1) {
+      state.correctAnswers = Math.max(0, safeInt(state.correctAnswers) + Math.max(0, safeInt(amount)));
+      saveState();
+    }
+
+    function completeGame() {
+      state.gamesPlayed = Math.max(0, safeInt(state.gamesPlayed) + 1);
+      addDiamonds(1);
+      saveState();
+      updateBadges();
+    }
+
+    function updateBadges() {
+      const unlocked = new Set(state.badges);
+      const newBadges = [];
+      BADGES.forEach(badge => {
+        let qualifies = false;
+        try { qualifies = Boolean(badge.test(state)); } catch (_) { qualifies = false; }
+        if (qualifies && !unlocked.has(badge.id)) {
+          unlocked.add(badge.id);
+          newBadges.push(badge);
+        }
+      });
+
+      if (newBadges.length) {
+        state.badges = [...unlocked];
+        state.diamonds += newBadges.length * 2;
+        saveState();
+        runtime.badgeQueue.push(...newBadges);
+        createCelebration(24);
+        setTimeout(showNextBadgeModal, 260);
+      }
+    }
+
+    function markLearned(letter) {
+      if (!LETTERS.some(x => x.letter === letter)) return false;
+      const before = state.learnedLetters.length;
+      state.learnedLetters = [...new Set([...state.learnedLetters, letter])].slice(0, 26);
+      const isNew = state.learnedLetters.length > before;
+      saveState();
+      if (isNew) {
+        updateBadges();
+        if (state.learnedLetters.length === 26) createCelebration(42);
+      }
+      return isNew;
+    }
+
+    // ============================================================
+    // CELEBRATION / MODALS / TOASTS
+    // ============================================================
+    function createCelebration(count = 14) {
+      const layer = document.getElementById("celebration-layer");
+      if (!layer) return;
+      const icons = ["🎉", "⭐", "✨", "🎊"];
+      const amount = clamp(Number(count) || 12, 4, 48);
+      for (let i = 0; i < amount; i++) {
+        const p = document.createElement("span");
+        p.className = "particle";
+        p.textContent = randomItem(icons);
+        p.style.left = `${Math.random() * 100}%`;
+        p.style.fontSize = `${14 + Math.random() * 18}px`;
+        p.style.animationDuration = `${1.6 + Math.random() * 1.5}s`;
+        p.style.animationDelay = `${Math.random() * .28}s`;
+        p.style.setProperty("--drift", `${-70 + Math.random() * 140}px`);
+        p.style.setProperty("--spin", `${-300 + Math.random() * 600}deg`);
+        layer.appendChild(p);
+        setTimeout(() => p.remove(), 3600);
+      }
+    }
+
+    function showModal(html) {
+      const root = document.getElementById("overlay-root");
+      if (!root) return;
+      root.innerHTML = `<div class="modal-backdrop" role="presentation"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;
+    }
+
+    function closeModal() {
+      const root = document.getElementById("overlay-root");
+      if (root) root.innerHTML = "";
+    }
+
+    function showNextBadgeModal() {
+      const root = document.getElementById("overlay-root");
+      if (!root || root.innerHTML.trim()) return;
+      const badge = runtime.badgeQueue.shift();
+      if (!badge) return;
+      showModal(`
+        <div class="big">${badge.icon}</div>
+        <h2>Badge baru!</h2>
+        <p><strong>${escapeHtml(badge.name)}</strong><br>Yeay! Kamu juga dapat 💎 +2.</p>
+        <button class="primary-btn" data-action="close-badge">Keren! ✨</button>
+      `);
+    }
+
+    function showToast(message, duration = 1800) {
+      const old = document.querySelector(".toast");
+      if (old) old.remove();
+      if (runtime.toastTimer) clearTimeout(runtime.toastTimer);
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      runtime.toastTimer = setTimeout(() => toast.remove(), duration);
+    }
+
+    // ============================================================
+    // NAVIGATION / RENDER
+    // ============================================================
+    function navigateTo(view, payload = {}) {
+      runtime.viewToken += 1;
+      stopAudio();
+      runtime.isTransitioning = false;
+      runtime.previousView = runtime.currentView;
+      runtime.currentView = view;
+      if (Number.isFinite(payload.letterIndex)) runtime.letterIndex = clamp(payload.letterIndex, 0, 25);
+      renderApp();
+      window.scrollTo({ top: 0, behavior: "auto" });
+      afterRender(view);
+    }
+
+    function afterRender(view) {
+      const token = runtime.viewToken;
+      if (view === "home" && !runtime.homeGreeted) {
+        runtime.homeGreeted = true;
+        scheduleAudio([
+          { text: "Halo! Aku Pipit.", pause: 500, style: "instruction" },
+          { text: "Ayo belajar huruf sambil bermain!", pause: 0, style: "instruction" }
+        ], 720, token);
+      }
+
+      if (view === "detail") scheduleAudio(detailAudioItems(LETTERS[runtime.letterIndex]), 620, token);
+      if (view === "guess" && runtime.guess && !runtime.guess.finished) scheduleAudio(guessQuestionAudio(), 600, token);
+      if (view === "find" && runtime.find && !runtime.find.finished) scheduleAudio(findQuestionAudio(), 600, token);
+      if (view === "match" && runtime.match && !runtime.match.finished) scheduleAudio(matchIntroAudio(), 600, token);
+      if (view === "first" && runtime.first && !runtime.first.finished) scheduleAudio(firstQuestionAudio(), 520, token);
+    }
+
+    function renderApp() {
+      const app = document.getElementById("app");
+      if (!app) return;
+      const view = runtime.currentView;
+      const noNav = ["splash", "onboarding"].includes(view);
+      app.innerHTML = `<main class="app-shell ${noNav ? "no-nav" : ""}">${renderView(view)}${noNav ? "" : renderBottomNav()}</main>`;
+      updateSpeakerUI();
+    }
+
+    function renderView(view) {
+      switch (view) {
+        case "splash": return renderSplash();
+        case "onboarding": return renderOnboarding();
+        case "home": return renderHome();
+        case "learn": return renderLearn();
+        case "detail": return renderLetterDetail();
+        case "games": return renderGameMenu();
+        case "guess": return renderGuessGame();
+        case "find": return renderFindGame();
+        case "match": return renderMatchGame();
+        case "first": return renderFirstLetterGame();
+        case "rewards": return renderRewards();
+        case "parentGate": return renderParentGate();
+        case "parent": return renderParentDashboard();
+        default: return renderHome();
+      }
+    }
+
+    function renderBottomNav() {
+      const activeMap = {
+        home: "home",
+        learn: "learn",
+        detail: "learn",
+        games: "games",
+        guess: "games",
+        find: "games",
+        match: "games",
+        first: "games",
+        rewards: "rewards"
+      };
+      const active = activeMap[runtime.currentView] || "";
+      return `
+        <nav class="bottom-nav" aria-label="Navigasi utama">
+          ${navButton("home", "🏠", "Home", active)}
+          ${navButton("learn", "📖", "Belajar", active)}
+          ${navButton("games", "🎮", "Game", active)}
+          ${navButton("rewards", "🏆", "Hadiah", active)}
+        </nav>
+      `;
+    }
+
+    function navButton(view, icon, label, active) {
+      return `<button class="nav-btn ${active === view ? "active" : ""}" data-action="nav" data-view="${view}" aria-label="${label}">${icon}<span>${label}</span></button>`;
+    }
+
+    // ============================================================
+    // SPLASH / ONBOARDING
+    // ============================================================
+    function renderSplash() {
+      return `
+        <section class="splash page" aria-label="Pipit Huruf">
+          <div>
+            <div class="mascot" aria-hidden="true">🐦</div>
+            <h1 class="brand-title">PIPIT HURUF</h1>
+            <p class="tagline">“Main, Dengar, Kenal, dan Ingat Huruf!”</p>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderOnboarding() {
+      const slides = [
+        { icon: "🐦", title: "Belajar Huruf Bersama Pipit", text: "Ayo kenalan dengan huruf A sampai Z!" },
+        { icon: "🎮", title: "Belajar Lewat Permainan", text: "Main, dengar, dan cari huruf sambil bersenang-senang." },
+        { icon: "⭐", title: "Kumpulkan Bintang!", text: "Belajar dan bermain untuk mendapatkan bintang dan badge." }
+      ];
+      const i = clamp(runtime.onboardingSlide, 0, slides.length - 1);
+      const slide = slides[i];
+      const last = i === slides.length - 1;
+      return `
+        <section class="onboarding page">
+          <div>
+            <div class="onboard-art"><span aria-hidden="true">${slide.icon}</span></div>
+            <div class="onboard-copy">
+              <h1>${slide.title}</h1>
+              <p>${slide.text}</p>
+            </div>
+          </div>
+          <div>
+            <div class="dots" aria-label="Langkah ${i + 1} dari 3">
+              ${slides.map((_, idx) => `<span class="dot ${idx === i ? "active" : ""}"></span>`).join("")}
+            </div>
+            <button class="primary-btn" data-action="onboarding-next">${last ? "MULAI BERMAIN" : "LANJUT"} ${last ? "🎉" : "→"}</button>
+          </div>
+        </section>
+      `;
+    }
+
+    // ============================================================
+    // HOME
+    // ============================================================
+    function renderHome() {
+      const learned = state.learnedLetters.length;
+      const pct = Math.round((learned / 26) * 100);
+      return `
+        <section class="page">
+          <div class="hero">
+            <div class="mascot" aria-hidden="true">🐦</div>
+            <div class="hero-copy">
+              <h1>Halo!</h1>
+              <p>Ayo bermain bersama Pipit!</p>
+              <button class="mini-btn" style="margin-top:12px;min-width:auto;padding:0 13px" data-action="home-speak" aria-label="Dengarkan Pipit">🔊 Dengar Pipit</button>
+            </div>
+          </div>
+
+          <div class="stats-row" aria-label="Hadiah dan streak">
+            <div class="stat-chip"><strong>⭐ ${state.stars}</strong><span>BINTANG</span></div>
+            <div class="stat-chip"><strong>💎 ${state.diamonds}</strong><span>BERLIAN</span></div>
+            <div class="stat-chip"><strong>🔥 ${state.streak}</strong><span>STREAK</span></div>
+          </div>
+
+          <div class="card sky">
+            <div class="progress-head"><strong>Huruf yang sudah dipelajari</strong><span>${learned} / 26</span></div>
+            <div class="progress-track" aria-label="Progress belajar ${pct} persen"><div class="progress-bar" style="width:${pct}%"></div></div>
+          </div>
+
+          ${learned === 0 ? `
+            <div class="empty-box">
+              <div class="emoji">🌱</div>
+              <h3>Belum ada huruf yang dipelajari.</h3>
+              <p>Ayo mulai dari huruf A!</p>
+              <button class="primary-btn" data-action="open-letter" data-index="0">BELAJAR SEKARANG</button>
+            </div>
+          ` : ""}
+
+          <button class="primary-btn" data-action="nav" data-view="learn">📖 BELAJAR HURUF</button>
+
+          <div class="section-title"><h2>🎮 Ayo bermain!</h2></div>
+          <div class="game-grid">
+            ${gameCard("start-guess", "🔤", "TEBAK HURUF", "Dengar lalu pilih hurufnya.", "c1")}
+            ${gameCard("start-find", "🔎", "CARI HURUF", "Temukan huruf di antara teman-temannya.", "c2")}
+            ${gameCard("start-match", "🧩", "PASANGKAN", "Cocokkan huruf besar dan kecil.", "c3")}
+            ${gameCard("start-first", "🎯", "HURUF AWAL", "Cari huruf pertama dari sebuah kata.", "c4")}
+          </div>
+
+          <div style="height:12px"></div>
+          <button class="secondary-btn" data-action="nav" data-view="rewards">🏆 HADIAHKU</button>
+          <button class="secondary-btn" style="margin-top:10px" data-action="open-parent">👨‍👩‍👧 ORANG TUA</button>
+        </section>
+      `;
+    }
+
+    function gameCard(action, icon, title, text, cls) {
+      return `<button class="game-card ${cls}" data-action="${action}"><span class="emoji" aria-hidden="true">${icon}</span><strong>${title}</strong><small>${text}</small></button>`;
+    }
+
+    // ============================================================
+    // LEARN / DETAIL
+    // ============================================================
+    function renderLearn() {
+      return `
+        <section class="page">
+          <div class="top-row">
+            <div>
+              <h1 class="page-title">📖 Belajar Huruf</h1>
+              <div class="subtle">Pilih huruf yang ingin kamu kenal.</div>
+            </div>
+            <div class="mascot small" aria-hidden="true">🐦</div>
+          </div>
+
+          <div class="card sky">
+            <div class="progress-head"><strong>Sudah dipelajari</strong><span>${state.learnedLetters.length} / 26</span></div>
+            <div class="progress-track"><div class="progress-bar" style="width:${(state.learnedLetters.length / 26) * 100}%"></div></div>
+          </div>
+
+          <div class="letter-grid" aria-label="Daftar huruf A sampai Z">
+            ${LETTERS.map((item, index) => `
+              <button class="letter-card" data-action="open-letter" data-index="${index}" aria-label="Buka huruf ${item.pronunciation}">
+                ${item.letter}
+                ${state.learnedLetters.includes(item.letter) ? `<span class="learned-mark" aria-label="Sudah dipelajari">✓</span>` : ""}
+              </button>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function detailAudioItems(item) {
+      return [
+        { text: `Ini huruf ${item.pronunciation}.`, pause: 600, style: "letter" },
+        { text: `${item.pronunciation}...`, pause: 450, style: "letter" },
+        { text: `${item.pronunciation} untuk ${item.word}.`, pause: 500, style: "letter" },
+        { text: `${item.word}.`, pause: 0, style: "instruction" }
+      ];
+    }
+
+    function renderLetterDetail() {
+      const item = LETTERS[runtime.letterIndex] || LETTERS[0];
+      return `
+        <section class="page">
+          <div class="top-row">
+            <button class="back-btn" data-action="nav" data-view="learn" aria-label="Kembali ke daftar huruf">←</button>
+            <strong>${runtime.letterIndex + 1} / 26</strong>
+            <button class="speaker" data-action="detail-speak" aria-label="Dengarkan suara" aria-pressed="false">🔊</button>
+          </div>
+
+          <div class="card detail-card ${runtime.letterIndex % 2 ? "lavender" : "sky"}">
+            <div class="detail-letters">
+              <div class="letter-box">
+                <div class="letter-big">${item.letter}</div>
+                <div class="letter-label">HURUF BESAR</div>
+              </div>
+              <div class="letter-box lower">
+                <div class="letter-big">${item.lowercase}</div>
+                <div class="letter-label">huruf kecil</div>
+              </div>
+            </div>
+            <div class="word-emoji" aria-hidden="true">${item.emoji}</div>
+            <div class="word-line">${item.letter} untuk ${item.word}</div>
+            <button class="secondary-btn" data-action="case-speak">🔊 Besar &amp; kecil</button>
+          </div>
+
+          <div class="btn-row">
+            <button class="secondary-btn" data-action="prev-letter" ${runtime.letterIndex === 0 ? "disabled" : ""}>← Sebelumnya</button>
+            <button class="primary-btn" data-action="next-letter" ${runtime.letterIndex === 25 ? "disabled" : ""}>Berikutnya →</button>
+          </div>
+        </section>
+      `;
+    }
+
+    function openLetter(index) {
+      const safeIndex = clamp(Number(index) || 0, 0, 25);
+      markLearned(LETTERS[safeIndex].letter);
+      navigateTo("detail", { letterIndex: safeIndex });
+    }
+
+    // ============================================================
+    // GAME MENU
+    // ============================================================
+    function renderGameMenu() {
+      return `
+        <section class="page">
+          <div class="top-row">
+            <div>
+              <h1 class="page-title">🎮 Ayo Bermain</h1>
+              <div class="subtle">Pilih permainan yang kamu suka.</div>
+            </div>
+            <div class="mascot small" aria-hidden="true">🐦</div>
+          </div>
+
+          <div class="game-grid">
+            ${gameCard("start-guess", "🔤", "TEBAK HURUF", "Dengar lalu pilih hurufnya.", "c1")}
+            ${gameCard("start-find", "🔎", "CARI HURUF", "Cari huruf yang Pipit sebut.", "c2")}
+            ${gameCard("start-match", "🧩", "PASANGKAN HURUF", "Huruf besar bertemu huruf kecil.", "c3")}
+            ${gameCard("start-first", "🎯", "HURUF AWAL", "Tebak huruf pertama dari kata.", "c4")}
+          </div>
+
+          <div class="card yellow" style="margin-top:14px;text-align:center">
+            <div style="font-size:34px">⭐</div>
+            <strong>Bermain bikin bintangmu bertambah!</strong>
+            <div class="subtle" style="margin-top:4px">Selesaikan game untuk mendapat berlian juga.</div>
+          </div>
+        </section>
+      `;
+    }
+
+    // ============================================================
+    // GAME 1: GUESS LETTER
+    // ============================================================
+    function buildGuessQuestions() {
+      const targets = shuffleArray(LETTERS).slice(0, 10);
+      return targets.map(target => {
+        const wrong = randomLetters(3, [target.letter]);
+        return {
+          target: target.letter,
+          options: shuffleArray([target.letter, ...wrong]),
+          attempts: 0
+        };
+      });
+    }
+
+    function startGuessGame() {
+      runtime.guess = {
+        index: 0,
+        score: 0,
+        questions: buildGuessQuestions(),
+        finished: false,
+        rewardStars: 0
+      };
+      navigateTo("guess");
+    }
+
+    function guessQuestionAudio() {
+      if (!runtime.guess || runtime.guess.finished) return [];
+      const q = runtime.guess.questions[runtime.guess.index];
+      const item = getLetter(q.target);
+      const i = runtime.guess.index;
+      if (i === 0) {
+        return [
+          { text: "Dengarkan, ya.", pause: 400, style: "instruction" },
+          { text: `Mana huruf ${item.pronunciation}?`, pause: 0, style: "instruction" }
+        ];
+      }
+      const text = i % 3 === 1
+        ? `Sekarang, cari huruf ${item.pronunciation}.`
+        : i % 3 === 2
+          ? `Coba pilih huruf ${item.pronunciation}.`
+          : `Mana huruf ${item.pronunciation}?`;
+      return [{ text, pause: 0, style: "instruction" }];
+    }
+
+    function renderGuessGame() {
+      const game = runtime.guess;
+      if (!game) return renderMissingGame("Tebak Huruf", "start-guess");
+      if (game.finished) return renderGameResult("guess", game.score, 10, game.rewardStars);
+      const q = game.questions[game.index];
+      const item = getLetter(q.target);
+      return `
+        <section class="page">
+          <div class="top-row">
+            <button class="back-btn" data-action="nav" data-view="games" aria-label="Kembali ke menu game">←</button>
+            <strong>🔤 Tebak Huruf</strong>
+            <button class="speaker" data-action="guess-speak" aria-label="Dengarkan soal" aria-pressed="false">🔊</button>
+          </div>
+          ${renderGameProgress(game.index + 1, 10)}
+          <div class="card question-card sky">
+            <div class="mascot small" style="margin:0 auto 14px" aria-hidden="true">🐦</div>
+            <div class="question-kicker">Dengarkan, ya</div>
+            <div class="question-text">Mana huruf <span aria-label="${item.pronunciation}">${item.letter}</span>?</div>
+            <div class="subtle">Yuk, pilih jawabannya!</div>
+          </div>
+          <div class="answer-grid">
+            ${q.options.map(letter => `<button class="answer-btn" data-action="guess-answer" data-letter="${letter}" aria-label="Huruf ${getLetter(letter).pronunciation}">${letter}</button>`).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    async function handleGuessAnswer(letter, button) {
+      const game = runtime.guess;
+      if (!game || game.finished || runtime.isTransitioning) return;
+      const q = game.questions[game.index];
+      if (!q) return;
+      const token = runtime.viewToken;
+
+      if (letter === q.target) {
+        runtime.isTransitioning = true;
+        document.querySelectorAll(".answer-btn").forEach(b => b.disabled = true);
+        if (button) button.classList.add("correct");
+        game.score += 1;
+        game.rewardStars += 1;
+        addStars(1);
+        addCorrect(1);
+        updateBadges();
+        createCelebration(12);
+        stopAudio();
+        await delay(300);
+        if (runtime.viewToken !== token || runtime.currentView !== "guess") return;
+
+        const target = getLetter(q.target);
+        const feedback = randomItem(["Hebat!", "Pintar!", "Benar!", "Keren!", "Bagus sekali!", "Yeay, benar!"]);
+        await audioManager.playSequence([
+          { text: feedback, pause: 300, style: "positive" },
+          { text: `Ini huruf ${target.pronunciation}.`, pause: 0, style: "letter" }
+        ], { restartDelay: 80 });
+
+        await delay(900);
+        if (runtime.viewToken !== token || runtime.currentView !== "guess") return;
+        if (game.index >= 9) {
+          game.finished = true;
+          completeGame();
+          createCelebration(30);
+          renderApp();
+          runtime.isTransitioning = false;
+          return;
+        }
+
+        game.index += 1;
+        runtime.isTransitioning = false;
+        renderApp();
+        await delay(500);
+        if (runtime.viewToken !== token || runtime.currentView !== "guess") return;
+        scheduleAudio(guessQuestionAudio(), 0, token);
+      } else {
+        runtime.isTransitioning = true;
+        q.attempts += 1;
+        if (button) button.classList.add("wrong");
+        stopAudio();
+        await delay(250);
+        if (runtime.viewToken !== token || runtime.currentView !== "guess") return;
+        const target = getLetter(q.target);
+        const text = q.attempts >= 2
+          ? `Coba cari huruf ${target.pronunciation}.`
+          : randomItem(["Hampir. Coba lagi, ya.", "Belum tepat. Coba sekali lagi.", "Ayo, coba lagi."]);
+        await audioManager.playSequence([{ text, pause: 0, style: "instruction" }], { restartDelay: 60 });
+        await delay(450);
+        if (runtime.viewToken !== token || runtime.currentView !== "guess") return;
+        runtime.isTransitioning = false;
+        if (button) button.classList.remove("wrong");
+      }
+    }
+
+    // ============================================================
+    // GAME 2: FIND LETTER
+    // ============================================================
+    function makeFindRound(targetLetter = null) {
+      const target = targetLetter || randomItem(LETTERS).letter;
+      const targetCount = 4 + Math.floor(Math.random() * 3);
+      const nonTargets = Array.from({ length: 16 - targetCount }, () => randomItem(randomLetters(1, [target])));
+      const cells = shuffleArray([
+        ...Array.from({ length: targetCount }, () => target),
+        ...nonTargets
+      ]).map((letter, index) => ({ id: `${Date.now()}-${index}-${Math.random()}`, letter, found: false }));
+      return { target, targetCount, foundCount: 0, cells, wrongTaps: 0 };
+    }
+
+    function startFindGame() {
+      runtime.find = {
+        roundIndex: 0,
+        totalRounds: 5,
+        round: makeFindRound(),
+        score: 0,
+        rewardStars: 0,
+        finished: false
+      };
+      navigateTo("find");
+    }
+
+    function findQuestionAudio() {
+      const game = runtime.find;
+      if (!game || game.finished) return [];
+      const item = getLetter(game.round.target);
+      return [
+        { text: `Yuk, cari semua huruf ${item.pronunciation}.`, pause: 500, style: "instruction" },
+        { text: `Ketuk huruf ${item.pronunciation} yang kamu temukan.`, pause: 0, style: "instruction" }
+      ];
+    }
+
+    function renderFindGame() {
+      const game = runtime.find;
+      if (!game) return renderMissingGame("Cari Huruf", "start-find");
+      if (game.finished) return renderGameResult("find", game.score, null, game.rewardStars);
+      const round = game.round;
+      const item = getLetter(round.target);
+      return `
+        <section class="page">
+          <div class="top-row">
+            <button class="back-btn" data-action="nav" data-view="games" aria-label="Kembali ke menu game">←</button>
+            <strong>🔎 Cari Huruf</strong>
+            <button class="speaker" data-action="find-speak" aria-label="Dengarkan instruksi" aria-pressed="false">🔊</button>
+          </div>
+          ${renderGameProgress(game.roundIndex + 1, game.totalRounds)}
+          <div class="card question-card mint">
+            <div class="question-kicker">Cari hurufnya!</div>
+            <div class="question-text">Cari semua huruf ${item.letter}</div>
+            <div style="font-weight:950;font-size:18px" id="find-count">${round.foundCount} / ${round.targetCount}</div>
+          </div>
+          <div class="find-grid" aria-label="Papan cari huruf">
+            ${round.cells.map((cell, index) => `
+              <button class="find-cell ${cell.found ? "found" : ""}" data-action="find-tap" data-index="${index}" ${cell.found ? "disabled" : ""} aria-label="Huruf ${getLetter(cell.letter).pronunciation}">${cell.found ? "✓" : cell.letter}</button>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    async function handleFindTap(index, button) {
+      const game = runtime.find;
+      if (!game || game.finished || runtime.isTransitioning) return;
+      const round = game.round;
+      const cell = round.cells[index];
+      if (!cell || cell.found) return;
+      const token = runtime.viewToken;
+
+      if (cell.letter === round.target) {
+        cell.found = true;
+        round.foundCount += 1;
+        game.score += 1;
+        game.rewardStars += 1;
+        addStars(1);
+        addCorrect(1);
+        updateBadges();
+        if (button) {
+          button.classList.add("found");
+          button.textContent = "✓";
+          button.disabled = true;
+        }
+        const counter = document.getElementById("find-count");
+        if (counter) counter.textContent = `${round.foundCount} / ${round.targetCount}`;
+        createCelebration(5);
+
+        if (round.foundCount < round.targetCount && round.foundCount % 2 === 1 && !audioManager.isSpeaking) {
+          audioManager.playSequence([{ text: randomItem(["Ketemu!", "Bagus!", "Keren!"]), pause: 0, style: "positive" }], { restartDelay: 40 });
+        }
+
+        if (round.foundCount >= round.targetCount) {
+          runtime.isTransitioning = true;
+          stopAudio();
+          await delay(300);
+          if (runtime.viewToken !== token || runtime.currentView !== "find") return;
+          const item = getLetter(round.target);
+          await audioManager.playSequence([
+            { text: "Yeay!", pause: 300, style: "positive" },
+            { text: `Semua huruf ${item.pronunciation} sudah ditemukan.`, pause: 300, style: "instruction" },
+            { text: "Hebat!", pause: 0, style: "positive" }
+          ], { restartDelay: 70 });
+          await delay(700);
+          if (runtime.viewToken !== token || runtime.currentView !== "find") return;
+
+          if (game.roundIndex >= game.totalRounds - 1) {
+            game.finished = true;
+            completeGame();
+            createCelebration(30);
+            runtime.isTransitioning = false;
+            renderApp();
+          } else {
+            const previousTarget = round.target;
+            game.roundIndex += 1;
+            let nextTarget = randomItem(LETTERS).letter;
+            while (nextTarget === previousTarget) nextTarget = randomItem(LETTERS).letter;
+            game.round = makeFindRound(nextTarget);
+            runtime.isTransitioning = false;
+            renderApp();
+            scheduleAudio(findQuestionAudio(), 600, token);
+          }
+        }
+      } else {
+        round.wrongTaps += 1;
+        if (button) {
+          button.classList.add("wrong");
+          setTimeout(() => button.classList.remove("wrong"), 420);
+        }
+        if (round.wrongTaps % 3 === 0) {
+          const item = getLetter(round.target);
+          audioManager.playSequence([{ text: `Cari huruf ${item.pronunciation}, ya.`, pause: 0, style: "instruction" }], { restartDelay: 60 });
+        }
+      }
+    }
+
+    // ============================================================
+    // GAME 3: MATCH LETTER
+    // ============================================================
+    function startMatchGame() {
+      const pairs = shuffleArray(LETTERS).slice(0, 5).map(x => x.letter);
+      runtime.match = {
+        pairs,
+        upperOrder: shuffleArray(pairs),
+        lowerOrder: shuffleArray(pairs),
+        matched: [],
+        selectedUpper: null,
+        selectedLower: null,
+        score: 0,
+        rewardStars: 0,
+        finished: false
+      };
+      navigateTo("match");
+    }
+
+    function matchIntroAudio() {
+      return [
+        { text: "Pasangkan huruf besar dengan huruf kecil.", pause: 500, style: "instruction" },
+        { text: "Pilih dua huruf yang sama.", pause: 0, style: "instruction" }
+      ];
+    }
+
+    function renderMatchGame() {
+      const game = runtime.match;
+      if (!game) return renderMissingGame("Pasangkan Huruf", "start-match");
+      if (game.finished) return renderGameResult("match", game.score, 5, game.rewardStars);
+      return `
+        <section class="page">
+          <div class="top-row">
+            <button class="back-btn" data-action="nav" data-view="games" aria-label="Kembali ke menu game">←</button>
+            <strong>🧩 Pasangkan Huruf</strong>
+            <button class="speaker" data-action="match-speak" aria-label="Dengarkan instruksi" aria-pressed="false">🔊</button>
+          </div>
+          ${renderGameProgress(game.matched.length, 5, "Cocok")}
+          <div class="card question-card yellow">
+            <div class="question-text" style="font-size:24px">Huruf besar ↔ huruf kecil</div>
+            <div class="subtle">Pilih dua huruf yang sama.</div>
+          </div>
+          <div class="match-columns">
+            <div class="match-col" aria-label="Huruf besar">
+              ${game.upperOrder.map(letter => matchButton(letter, "upper", game)).join("")}
+            </div>
+            <div class="match-col" aria-label="Huruf kecil">
+              ${game.lowerOrder.map(letter => matchButton(letter, "lower", game)).join("")}
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function matchButton(letter, side, game) {
+      const matched = game.matched.includes(letter);
+      const selected = side === "upper" ? game.selectedUpper === letter : game.selectedLower === letter;
+      const text = side === "upper" ? letter : getLetter(letter).lowercase;
+      return `<button class="match-btn ${matched ? "matched" : ""} ${selected ? "selected" : ""}" data-action="match-select" data-side="${side}" data-letter="${letter}" ${matched ? "disabled" : ""} aria-label="${side === "upper" ? "Huruf besar" : "Huruf kecil"} ${getLetter(letter).pronunciation}">${matched ? "✓" : text}</button>`;
+    }
+
+    async function handleMatchSelect(side, letter) {
+      const game = runtime.match;
+      if (!game || game.finished || runtime.isTransitioning || game.matched.includes(letter)) return;
+      const token = runtime.viewToken;
+      if (side === "upper") game.selectedUpper = game.selectedUpper === letter ? null : letter;
+      if (side === "lower") game.selectedLower = game.selectedLower === letter ? null : letter;
+      renderApp();
+
+      if (!game.selectedUpper || !game.selectedLower) return;
+      runtime.isTransitioning = true;
+      const same = game.selectedUpper === game.selectedLower;
+      const upper = game.selectedUpper;
+      const lower = game.selectedLower;
+      stopAudio();
+
+      if (same) {
+        game.matched.push(upper);
+        game.score += 1;
+        game.rewardStars += 1;
+        addStars(1);
+        addCorrect(1);
+        updateBadges();
+        createCelebration(8);
+        game.selectedUpper = null;
+        game.selectedLower = null;
+        renderApp();
+        await delay(250);
+        if (runtime.viewToken !== token || runtime.currentView !== "match") return;
+        const item = getLetter(upper);
+        const items = game.matched.length % 2 === 0
+          ? [
+              { text: "Cocok!", pause: 250, style: "positive" },
+              { text: `${item.pronunciation} besar, dan ${item.pronunciation} kecil.`, pause: 0, style: "letter" }
+            ]
+          : [{ text: randomItem(["Cocok!", "Benar!"]), pause: 0, style: "positive" }];
+        await audioManager.playSequence(items, { restartDelay: 60 });
+        await delay(550);
+        if (runtime.viewToken !== token || runtime.currentView !== "match") return;
+        if (game.matched.length >= 5) {
+          game.finished = true;
+          completeGame();
+          createCelebration(30);
+          runtime.isTransitioning = false;
+          renderApp();
+        } else {
+          runtime.isTransitioning = false;
+        }
+      } else {
+        document.querySelectorAll(`[data-action="match-select"][data-letter="${upper}"], [data-action="match-select"][data-letter="${lower}"]`).forEach(el => el.classList.add("wrong"));
+        await delay(180);
+        if (runtime.viewToken !== token || runtime.currentView !== "match") return;
+        await audioManager.playSequence([{ text: "Hampir. Coba lagi.", pause: 0, style: "instruction" }], { restartDelay: 50 });
+        await delay(430);
+        if (runtime.viewToken !== token || runtime.currentView !== "match") return;
+        game.selectedUpper = null;
+        game.selectedLower = null;
+        runtime.isTransitioning = false;
+        renderApp();
+      }
+    }
+
+    // ============================================================
+    // GAME 4: FIRST LETTER
+    // ============================================================
+    function buildFirstQuestions() {
+      return shuffleArray(LETTERS).slice(0, 10).map(item => ({
+        target: item.letter,
+        options: shuffleArray([item.letter, ...randomLetters(2, [item.letter])]),
+        attempts: 0
+      }));
+    }
+
+    function startFirstLetterGame() {
+      runtime.first = {
+        index: 0,
+        score: 0,
+        questions: buildFirstQuestions(),
+        finished: false,
+        rewardStars: 0
+      };
+      navigateTo("first");
+    }
+
+    function firstQuestionAudio() {
+      const game = runtime.first;
+      if (!game || game.finished) return [];
+      const q = game.questions[game.index];
+      const item = getLetter(q.target);
+      return [
+        { text: `Ini ${item.word}.`, pause: 500, style: "instruction" },
+        { text: `${item.word}...`, pause: 300, style: "instruction" },
+        { text: "dimulai dengan huruf apa?", pause: 0, style: "instruction" }
+      ];
+    }
+
+    function renderFirstLetterGame() {
+      const game = runtime.first;
+      if (!game) return renderMissingGame("Huruf Awal", "start-first");
+      if (game.finished) return renderGameResult("first", game.score, 10, game.rewardStars);
+      const q = game.questions[game.index];
+      const item = getLetter(q.target);
+      return `
+        <section class="page">
+          <div class="top-row">
+            <button class="back-btn" data-action="nav" data-view="games" aria-label="Kembali ke menu game">←</button>
+            <strong>🎯 Huruf Awal</strong>
+            <button class="speaker" data-action="first-speak" aria-label="Dengarkan soal" aria-pressed="false">🔊</button>
+          </div>
+          ${renderGameProgress(game.index + 1, 10)}
+          <div class="card question-card peach">
+            <div class="question-emoji" aria-hidden="true">${item.emoji}</div>
+            <div class="question-word">${item.word.toUpperCase()}</div>
+            <div class="question-text" style="font-size:23px">${item.word} dimulai dengan huruf apa?</div>
+          </div>
+          <div class="answer-grid three">
+            ${q.options.map(letter => `<button class="answer-btn" data-action="first-answer" data-letter="${letter}" aria-label="Huruf ${getLetter(letter).pronunciation}">${letter}</button>`).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    async function handleFirstAnswer(letter, button) {
+      const game = runtime.first;
+      if (!game || game.finished || runtime.isTransitioning) return;
+      const q = game.questions[game.index];
+      if (!q) return;
+      const token = runtime.viewToken;
+      const item = getLetter(q.target);
+
+      if (letter === q.target) {
+        runtime.isTransitioning = true;
+        document.querySelectorAll(".answer-btn").forEach(b => b.disabled = true);
+        if (button) button.classList.add("correct");
+        game.score += 1;
+        game.rewardStars += 1;
+        addStars(1);
+        addCorrect(1);
+        updateBadges();
+        createCelebration(12);
+        stopAudio();
+        await delay(300);
+        if (runtime.viewToken !== token || runtime.currentView !== "first") return;
+        await audioManager.playSequence([
+          { text: "Benar!", pause: 350, style: "positive" },
+          { text: `${item.word} dimulai dengan huruf ${item.pronunciation}.`, pause: 0, style: "letter" }
+        ], { restartDelay: 70 });
+        await delay(900);
+        if (runtime.viewToken !== token || runtime.currentView !== "first") return;
+
+        if (game.index >= 9) {
+          game.finished = true;
+          completeGame();
+          createCelebration(30);
+          runtime.isTransitioning = false;
+          renderApp();
+        } else {
+          game.index += 1;
+          runtime.isTransitioning = false;
+          renderApp();
+          scheduleAudio(firstQuestionAudio(), 520, token);
+        }
+      } else {
+        runtime.isTransitioning = true;
+        q.attempts += 1;
+        if (button) button.classList.add("wrong");
+        stopAudio();
+        await delay(250);
+        if (runtime.viewToken !== token || runtime.currentView !== "first") return;
+        const text = q.attempts >= 2
+          ? `${item.word} dimulai dengan huruf apa? Coba lagi.`
+          : "Hampir. Coba lagi, ya.";
+        await audioManager.playSequence([{ text, pause: 0, style: "instruction" }], { restartDelay: 55 });
+        await delay(420);
+        if (runtime.viewToken !== token || runtime.currentView !== "first") return;
+        runtime.isTransitioning = false;
+        if (button) button.classList.remove("wrong");
+      }
+    }
+
+    // ============================================================
+    // RESULTS
+    // ============================================================
+    function resultMessage(score, total) {
+      if (!Number.isFinite(total)) return "Hebat! Kamu menemukan banyak huruf.";
+      if (score === total) return "Luar biasa!";
+      const ratio = score / total;
+      if (ratio >= .7) return "Hebat!";
+      if (ratio >= .4) return "Bagus! Ayo latihan lagi.";
+      return "Ayo belajar lagi bersama Pipit!";
+    }
+
+    function renderGameResult(type, score, total, rewardStars) {
+      const meta = {
+        guess: { title: "Tebak Huruf", action: "start-guess" },
+        find: { title: "Cari Huruf", action: "start-find" },
+        match: { title: "Pasangkan Huruf", action: "start-match" },
+        first: { title: "Huruf Awal", action: "start-first" }
+      }[type] || { title: "Game", action: "nav" };
+      const scoreText = Number.isFinite(total) ? `${score} / ${total}` : `${score} ditemukan`;
+      return `
+        <section class="page result-wrap">
+          <div class="card yellow">
+            <div class="result-emoji">🎉</div>
+            <h1 class="page-title" style="margin-top:8px">HEBAT!</h1>
+            <div class="subtle">Yeay! Permainan selesai!</div>
+            <div class="result-score">${scoreText}</div>
+            <p style="margin:8px 0 14px;font-weight:900">${resultMessage(score, total)}</p>
+            <div>
+              <span class="reward-pill">⭐ +${safeInt(rewardStars)}</span>
+              <span class="reward-pill">💎 +1</span>
+            </div>
+          </div>
+          <button class="primary-btn" data-action="${meta.action}">MAIN LAGI</button>
+          <button class="secondary-btn" style="margin-top:10px" data-action="nav" data-view="home">KEMBALI KE HOME</button>
+        </section>
+      `;
+    }
+
+    function renderMissingGame(title, action) {
+      return `
+        <section class="page">
+          <div class="card yellow" style="text-align:center;margin-top:32px">
+            <div style="font-size:48px">🎮</div>
+            <h1 class="page-title">${title}</h1>
+            <p class="subtle">Ayo mulai permainannya.</p>
+            <button class="primary-btn" data-action="${action}">MULAI</button>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderGameProgress(current, total, label = "Soal") {
+      const pct = clamp((current / total) * 100, 0, 100);
+      return `<div class="game-progress"><span>${label} ${current} / ${total}</span><div class="mini-progress"><span style="width:${pct}%"></span></div></div>`;
+    }
+
+    // ============================================================
+    // REWARDS
+    // ============================================================
+    function renderRewards() {
+      return `
+        <section class="page">
+          <div class="top-row">
+            <div>
+              <h1 class="page-title">🏆 Hadiahku</h1>
+              <div class="subtle">Lihat bintang, berlian, dan badge-mu.</div>
+            </div>
+            <div class="mascot small" aria-hidden="true">🐦</div>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-chip"><strong>⭐ ${state.stars}</strong><span>TOTAL BINTANG</span></div>
+            <div class="stat-chip"><strong>💎 ${state.diamonds}</strong><span>BERLIAN</span></div>
+            <div class="stat-chip"><strong>🔥 ${state.streak}</strong><span>STREAK</span></div>
+          </div>
+
+          <div class="section-title"><h2>Badge Saya</h2><span class="subtle">${state.badges.length} / ${BADGES.length}</span></div>
+          <div class="badge-grid">
+            ${BADGES.map(badge => {
+              const unlocked = state.badges.includes(badge.id);
+              return `<div class="badge-card ${unlocked ? "" : "locked"}">
+                <div class="badge-icon">${unlocked ? badge.icon : "🔒"}</div>
+                <strong>${escapeHtml(badge.name)}</strong>
+                <small>${escapeHtml(badge.desc)}</small>
+              </div>`;
+            }).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    // ============================================================
+    // PARENT MODE
+    // ============================================================
+    function newParentQuestion() {
+      runtime.parentA = 2 + Math.floor(Math.random() * 7);
+      runtime.parentB = 1 + Math.floor(Math.random() * 6);
+    }
+
+    function renderParentGate() {
+      return `
+        <section class="page">
+          <div class="top-row">
+            <button class="back-btn" data-action="nav" data-view="home" aria-label="Kembali ke Home">←</button>
+            <strong>Untuk Orang Tua</strong>
+            <div style="width:46px"></div>
+          </div>
+          <div class="card lavender">
+            <div style="font-size:48px;text-align:center">👨‍👩‍👧</div>
+            <h1 class="page-title" style="text-align:center;margin-top:8px">Khusus orang tua</h1>
+            <p class="subtle" style="text-align:center">Jawab dulu pertanyaan sederhana ini, ya.</p>
+            <div class="parent-question">${runtime.parentA} + ${runtime.parentB} = ?</div>
+            <input id="parent-answer" class="number-input" type="number" inputmode="numeric" autocomplete="off" aria-label="Jawaban hitungan" />
+            <button class="primary-btn" data-action="check-parent">MASUK</button>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderParentDashboard() {
+      const learned = [...state.learnedLetters].sort((a, b) => getLetterIndex(a) - getLetterIndex(b));
+      const notLearned = LETTERS.map(x => x.letter).filter(x => !learned.includes(x));
+      const pct = Math.round((learned.length / 26) * 100);
+      return `
+        <section class="page">
+          <div class="top-row">
+            <button class="back-btn" data-action="nav" data-view="home" aria-label="Kembali ke Home">←</button>
+            <strong>Perkembangan Belajar</strong>
+            <div style="width:46px"></div>
+          </div>
+
+          <div class="card sky">
+            <div class="progress-head"><strong>Huruf Dipelajari</strong><span>${learned.length} / 26</span></div>
+            <div class="progress-track"><div class="progress-bar" style="width:${pct}%"></div></div>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-chip"><strong>⭐ ${state.stars}</strong><span>BINTANG</span></div>
+            <div class="stat-chip"><strong>💎 ${state.diamonds}</strong><span>BERLIAN</span></div>
+            <div class="stat-chip"><strong>🔥 ${state.streak}</strong><span>${state.streak === 1 ? "HARI" : "HARI"}</span></div>
+          </div>
+
+          <div class="card mint">
+            <div class="progress-head"><strong>Game dimainkan</strong><span>${state.gamesPlayed}</span></div>
+            <div class="progress-head" style="margin-bottom:0"><strong>Jawaban benar</strong><span>${state.correctAnswers}</span></div>
+          </div>
+
+          <div class="card">
+            <strong>Huruf Sudah Dipelajari</strong>
+            ${learned.length ? `<div class="letter-list">${learned.map(l => `<span class="letter-pill">${l}</span>`).join("")}</div>` : `<p class="subtle">Belum ada huruf yang dipelajari.</p>`}
+          </div>
+
+          <div class="card">
+            <strong>Huruf Belum Dipelajari</strong>
+            ${notLearned.length ? `<div class="letter-list">${notLearned.map(l => `<span class="letter-pill" style="background:var(--lavender)">${l}</span>`).join("")}</div>` : `<p class="subtle">Semua huruf sudah dipelajari. Hebat!</p>`}
+          </div>
+
+          <button class="danger-btn" data-action="confirm-reset">RESET PERKEMBANGAN</button>
+
+          <div class="footer-note">
+            <strong>Pipit Huruf</strong><br>
+            by PipitPintar<br>
+            “Media Edukasi Anak untuk PAUD, TK &amp; SD”
+          </div>
+        </section>
+      `;
+    }
+
+    function showResetModal() {
+      showModal(`
+        <div class="big">⚠️</div>
+        <h2>Reset perkembangan?</h2>
+        <p>Yakin ingin menghapus semua perkembangan belajar?</p>
+        <div class="btn-row">
+          <button class="secondary-btn" data-action="close-modal">BATAL</button>
+          <button class="danger-btn" data-action="do-reset">RESET</button>
+        </div>
+      `);
+    }
+
+    function resetProgress() {
+      Object.values(STORAGE).forEach(key => {
+        if (key !== STORAGE.onboarding) safeRemove(key);
+      });
+      state = defaultState();
+      updateStreak();
+      runtime.guess = null;
+      runtime.find = null;
+      runtime.match = null;
+      runtime.first = null;
+      runtime.badgeQueue = [];
+      closeModal();
+      navigateTo("parent");
+      showToast("Perkembangan sudah direset.");
+    }
+
+    // ============================================================
+    // EVENT HANDLING — single delegated listener
+    // ============================================================
+    document.addEventListener("click", async event => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const action = button.dataset.action;
+
+      if (action === "nav") {
+        navigateTo(button.dataset.view || "home");
+        return;
+      }
+
+      if (action === "onboarding-next") {
+        if (runtime.onboardingSlide < 2) {
+          runtime.onboardingSlide += 1;
+          renderApp();
+        } else {
+          safeSet(STORAGE.onboarding, "1");
+          navigateTo("home");
+        }
+        return;
+      }
+
+      if (action === "home-speak") {
+        if (!audioManager.supported) return showToast("Suara belum didukung di browser ini.");
+        speakSequence([
+          { text: "Halo! Aku Pipit.", pause: 500, style: "instruction" },
+          { text: "Ayo belajar huruf sambil bermain!", pause: 0, style: "instruction" }
+        ]);
+        return;
+      }
+
+      if (action === "open-letter") {
+        openLetter(Number(button.dataset.index));
+        return;
+      }
+      if (action === "prev-letter") {
+        if (runtime.letterIndex > 0) openLetter(runtime.letterIndex - 1);
+        return;
+      }
+      if (action === "next-letter") {
+        if (runtime.letterIndex < 25) openLetter(runtime.letterIndex + 1);
+        return;
+      }
+      if (action === "detail-speak") {
+        if (!audioManager.supported) return showToast("Suara belum didukung di browser ini.");
+        speakSequence(detailAudioItems(LETTERS[runtime.letterIndex]));
+        return;
+      }
+      if (action === "case-speak") {
+        if (!audioManager.supported) return showToast("Suara belum didukung di browser ini.");
+        const item = LETTERS[runtime.letterIndex];
+        speakSequence([
+          { text: `Ini ${item.pronunciation} besar.`, pause: 500, style: "letter" },
+          { text: `Ini ${item.pronunciation} kecil.`, pause: 500, style: "letter" },
+          { text: `Keduanya adalah huruf ${item.pronunciation}.`, pause: 0, style: "letter" }
+        ]);
+        return;
+      }
+
+      if (action === "start-guess") return startGuessGame();
+      if (action === "guess-speak") {
+        if (!audioManager.supported) return showToast("Suara belum didukung di browser ini.");
+        return speakSequence(guessQuestionAudio());
+      }
+      if (action === "guess-answer") return handleGuessAnswer(button.dataset.letter, button);
+
+      if (action === "start-find") return startFindGame();
+      if (action === "find-speak") {
+        if (!audioManager.supported) return showToast("Suara belum didukung di browser ini.");
+        return speakSequence(findQuestionAudio());
+      }
+      if (action === "find-tap") return handleFindTap(Number(button.dataset.index), button);
+
+      if (action === "start-match") return startMatchGame();
+      if (action === "match-speak") {
+        if (!audioManager.supported) return showToast("Suara belum didukung di browser ini.");
+        return speakSequence(matchIntroAudio());
+      }
+      if (action === "match-select") return handleMatchSelect(button.dataset.side, button.dataset.letter);
+
+      if (action === "start-first") return startFirstLetterGame();
+      if (action === "first-speak") {
+        if (!audioManager.supported) return showToast("Suara belum didukung di browser ini.");
+        return speakSequence(firstQuestionAudio());
+      }
+      if (action === "first-answer") return handleFirstAnswer(button.dataset.letter, button);
+
+      if (action === "open-parent") {
+        newParentQuestion();
+        navigateTo("parentGate");
+        setTimeout(() => document.getElementById("parent-answer")?.focus(), 180);
+        return;
+      }
+      if (action === "check-parent") {
+        const input = document.getElementById("parent-answer");
+        const answer = Number(input?.value);
+        if (answer === runtime.parentA + runtime.parentB) {
+          navigateTo("parent");
+        } else {
+          if (input) {
+            input.value = "";
+            input.classList.add("wrong");
+            setTimeout(() => input.classList.remove("wrong"), 400);
+            input.focus();
+          }
+          showToast("Coba hitung lagi, ya.");
+        }
+        return;
+      }
+      if (action === "confirm-reset") return showResetModal();
+      if (action === "close-modal") return closeModal();
+      if (action === "do-reset") return resetProgress();
+      if (action === "close-badge") {
+        closeModal();
+        setTimeout(showNextBadgeModal, 120);
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Enter" && runtime.currentView === "parentGate") {
+        const btn = document.querySelector('button[data-action="check-parent"]');
+        if (btn) btn.click();
+      }
+    });
+
+    window.addEventListener("pagehide", () => stopAudio());
+    window.addEventListener("beforeunload", () => stopAudio());
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stopAudio();
+    });
+
+    // ============================================================
+    // INITIALIZE
+    // ============================================================
+    function initializeApp() {
+      loadState();
+      updateStreak();
+      updateBadges();
+      runtime.currentView = "splash";
+      runtime.viewToken += 1;
+      renderApp();
+
+      const splashToken = runtime.viewToken;
+      setTimeout(() => {
+        if (runtime.viewToken !== splashToken || runtime.currentView !== "splash") return;
+        const onboarded = safeGet(STORAGE.onboarding, "0") === "1";
+        navigateTo(onboarded ? "home" : "onboarding");
+      }, 1250);
+    }
+
+    initializeApp();
+  </script>
+</body>
+</html>
